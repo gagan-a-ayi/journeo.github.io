@@ -1993,18 +1993,18 @@
                                             <div class="info-value">${formatDateTime(leg.departure)}</div>
                                         </div>
                                         <div class="info-item">
-                                            <div class="info-label">Arrival</div>
+                                            <div class="info-label">Arrival Date & Time</div>
                                             <div class="info-value">${formatDateTime(leg.arrival)}</div>
                                         </div>
                                         ${leg.seatNumber ? `
                                             <div class="info-item">
-                                                <div class="info-label">Seat/Coach</div>
+                                                <div class="info-label">Seat/Coach No.</div>
                                                 <div class="info-value">${leg.seatNumber}</div>
                                             </div>
                                         ` : ''}
                                         ${leg.platform ? `
                                             <div class="info-item">
-                                                <div class="info-label">Platform/Gate</div>
+                                                <div class="info-label">Platform/Gate/Terminal</div>
                                                 <div class="info-value">${leg.platform}</div>
                                             </div>
                                         ` : ''}
@@ -2068,7 +2068,7 @@
                         </div>
                         <div class="info-grid" style="margin-bottom: 12px;">
                             <div class="info-item">
-                                <div class="info-label">Arrival</div>
+                                <div class="info-label">Arrival Date & Time</div>
                                 <div class="info-value">${formatDateTime(visit.arrival)}</div>
                             </div>
                             ${visit.departure ? `
