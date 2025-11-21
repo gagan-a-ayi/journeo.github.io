@@ -1127,7 +1127,7 @@
                     </div>
                     <form id="newTripForm" onsubmit="createTrip(event)">
                         <div class="form-group">
-                            <label class="form-label">Trip Name</label>
+                            <label class="form-label">Trip/Event Name</label>
                             <input type="text" class="form-control" name="name" placeholder="e.g., Summer Vacation 2025" required>
                         </div>
                         <div class="form-group">
@@ -1409,42 +1409,42 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Train/Vehicle Name</label>
+                        <label class="form-label">Train/Vehicle/Flight Name</label>
                         <input type="text" class="form-control" name="vehicleName" placeholder="e.g., Rajdhani Express, Volvo Sleeper">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Vehicle Number</label>
+                            <label class="form-label">Train/Vehicle/Flight No.</label>
                             <input type="text" class="form-control" name="vehicleNumber" placeholder="e.g., 12345, 6E-123">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Operator/Carrier</label>
+                            <label class="form-label">Operator/Carrier/Department</label>
                             <input type="text" class="form-control" name="operator" placeholder="e.g., Indian Railways, IndiGo">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">From</label>
+                            <label class="form-label">From Location</label>
                             <input type="text" class="form-control" name="fromLocation" placeholder="Start location" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">To</label>
+                            <label class="form-label">To Location</label>
                             <input type="text" class="form-control" name="toLocation" placeholder="End location" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Departure</label>
+                            <label class="form-label">Departure Date & Time</label>
                             <input type="datetime-local" class="form-control" name="departure" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Arrival</label>
+                            <label class="form-label">Arrival Date & Time</label>
                             <input type="datetime-local" class="form-control" name="arrival" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Seat/Coach Number</label>
+                            <label class="form-label">Seat/Coach No.</label>
                             <input type="text" class="form-control" name="seatNumber" placeholder="e.g., S4-42, 12A">
                         </div>
                         <div class="form-group">
@@ -1495,6 +1495,7 @@
                         <label class="form-label">Category</label>
                         <select class="form-control" name="category">
                             <option value="Historical">Historical</option>
+                            <option value="Temple">Temple</option>
                             <option value="Beach">Beach</option>
                             <option value="Mountain">Mountain</option>
                             <option value="Restaurant">Restaurant</option>
@@ -1506,7 +1507,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Arrival Time</label>
+                            <label class="form-label">Visit Time</label>
                             <input type="datetime-local" class="form-control" name="arrival" required>
                         </div>
                         <div class="form-group">
@@ -1541,7 +1542,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="form-label">Upload Photos</label>
                         <input type="file" id="visitPhotos" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event, 'visitPhotoPreview')">
                         <label for="visitPhotos" class="photo-upload-btn">
@@ -1549,7 +1550,7 @@
                             Choose Photos
                         </label>
                         <div id="visitPhotoPreview" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <label class="form-label">Notes</label>
                         <textarea class="form-control" name="notes" placeholder="Recommendations, highlights, etc."></textarea>
@@ -1578,20 +1579,20 @@
             <div class="modal-body">
                 <form id="addHaltForm" onsubmit="addHalt(event)">
                     <div class="form-group">
-                        <label class="form-label">Location</label>
+                        <label class="form-label">Location/Venue</label>
                         <input type="text" class="form-control" name="location" placeholder="City or area" required>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Accommodation Type</label>
                             <select class="form-control" name="type">
-                                <option value="Hotel">🏨 Hotel</option>
-                                <option value="Resort">🏖️ Resort</option>
-                                <option value="Guesthouse">🏠 Guesthouse</option>
-                                <option value="Hostel">🛏️ Hostel</option>
-                                <option value="Airbnb">🏡 Airbnb</option>
-                                <option value="Camping">⛺ Camping</option>
-                                <option value="Other">📍 Other</option>
+                                <option value="Hotel"> Hotel</option>
+                                <option value="Resort"> Resort</option>
+                                <option value="Guesthouse"> Guesthouse</option>
+                                <option value="Hostel"> Hostel</option>
+                                <option value="Airbnb"> Airbnb</option>
+                                <option value="Camping"> Camping</option>
+                                <option value="Other"> Other</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1601,17 +1602,17 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Check-in</label>
+                            <label class="form-label">Check-in Date & Time</label>
                             <input type="datetime-local" class="form-control" name="checkin" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Check-out</label>
+                            <label class="form-label">Check-out Date & Time</label>
                             <input type="datetime-local" class="form-control" name="checkout" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Room Number</label>
+                            <label class="form-label">Room No.</label>
                             <input type="text" class="form-control" name="roomNumber" placeholder="e.g., 302">
                         </div>
                         <div class="form-group">
@@ -1625,7 +1626,7 @@
                             <input type="text" class="form-control" name="bookingRef" placeholder="Confirmation number">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Contact Number</label>
+                            <label class="form-label">Contact No.</label>
                             <input type="tel" class="form-control" name="contact" placeholder="Hotel contact">
                         </div>
                     </div>
@@ -2130,16 +2131,16 @@
                         </div>
                         <div class="info-grid" style="margin-bottom: 12px;">
                             <div class="info-item">
-                                <div class="info-label">Check-in</div>
+                                <div class="info-label">Check-in Date & Time</div>
                                 <div class="info-value">${formatDateTime(halt.checkin)}</div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">Check-out</div>
+                                <div class="info-label">Check-out Date & Time</div>
                                 <div class="info-value">${formatDateTime(halt.checkout)}</div>
                             </div>
                             ${halt.roomNumber ? `
                                 <div class="info-item">
-                                    <div class="info-label">Room</div>
+                                    <div class="info-label">Room No.</div>
                                     <div class="info-value">${halt.roomNumber}</div>
                                 </div>
                             ` : ''}
@@ -2157,7 +2158,7 @@
                             ` : ''}
                             ${halt.contact ? `
                                 <div class="info-item">
-                                    <div class="info-label">Contact</div>
+                                    <div class="info-label">Contact No.</div>
                                     <div class="info-value">${halt.contact}</div>
                                 </div>
                             ` : ''}
@@ -2566,47 +2567,47 @@
                                     <div class="info-value"><span class="status-badge ${statusClass}">${(leg.status || 'not-started').replace('-', ' ')}</span></div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Mode</div>
+                                    <div class="info-label">Transport Mode</div>
                                     <div class="info-value">${leg.mode}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Vehicle Name</div>
+                                    <div class="info-label">Train/Vehicle/Flight Name</div>
                                     <div class="info-value">${leg.vehicleName || 'N/A'}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Vehicle Number</div>
+                                    <div class="info-label">Train/Vehicle/Flight No.</div>
                                     <div class="info-value">${leg.vehicleNumber || 'N/A'}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Operator</div>
+                                    <div class="info-label">Operator/Carrier/Department</div>
                                     <div class="info-value">${leg.operator || 'N/A'}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">From</div>
+                                    <div class="info-label">From Location</div>
                                     <div class="info-value">${leg.fromLocation}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">To</div>
+                                    <div class="info-label">To Location</div>
                                     <div class="info-value">${leg.toLocation}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Departure</div>
+                                    <div class="info-label">Departure Date & Time</div>
                                     <div class="info-value">${formatDateTime(leg.departure)}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Arrival</div>
+                                    <div class="info-label">Arrival Date & Time</div>
                                     <div class="info-value">${formatDateTime(leg.arrival)}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Seat/Coach</div>
+                                    <div class="info-label">Seat/Coach No.</div>
                                     <div class="info-value">${leg.seatNumber || 'N/A'}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Platform/Gate</div>
+                                    <div class="info-label">Platform/Gate/Terminal</div>
                                     <div class="info-value">${leg.platform || 'N/A'}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Booking Reference</div>
+                                    <div class="info-label">PNR/Booking Ref</div>
                                     <div class="info-value">${leg.bookingRef || 'N/A'}</div>
                                 </div>
                                 ${leg.cost ? `
@@ -2658,7 +2659,7 @@
                                     <div class="info-value">${visit.category}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Arrival Time</div>
+                                    <div class="info-label">Visit Time</div>
                                     <div class="info-value">${formatDateTime(visit.arrival)}</div>
                                 </div>
                                 ${visit.departure ? `
@@ -2724,24 +2725,24 @@
                                     <div class="info-value"><span class="status-badge ${statusClass}">${(halt.status || 'not-started').replace('-', ' ')}</span></div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Type</div>
+                                    <div class="info-label">Accommodation Type</div>
                                     <div class="info-value">${halt.type}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Location</div>
+                                    <div class="info-label">Location/Venue</div>
                                     <div class="info-value">${halt.location}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Check-in</div>
+                                    <div class="info-label">Check-in Date & Time</div>
                                     <div class="info-value">${formatDateTime(halt.checkin)}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Check-out</div>
+                                    <div class="info-label">Check-out Date & Time</div>
                                     <div class="info-value">${formatDateTime(halt.checkout)}</div>
                                 </div>
                                 ${halt.roomNumber ? `
                                     <div class="info-item">
-                                        <div class="info-label">Room Number</div>
+                                        <div class="info-label">Room No.</div>
                                         <div class="info-value">${halt.roomNumber}</div>
                                     </div>
                                 ` : ''}
@@ -2753,13 +2754,13 @@
                                 ` : ''}
                                 ${halt.bookingRef ? `
                                     <div class="info-item">
-                                        <div class="info-label">Booking Reference</div>
+                                        <div class="info-label">Booking Ref</div>
                                         <div class="info-value">${halt.bookingRef}</div>
                                     </div>
                                 ` : ''}
                                 ${halt.contact ? `
                                     <div class="info-item">
-                                        <div class="info-label">Contact</div>
+                                        <div class="info-label">Contact No.</div>
                                         <div class="info-value">${halt.contact}</div>
                                     </div>
                                 ` : ''}
