@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journeo – Hybrid Travel Logger & Visit Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #4F46E5;
+            --color-primary-dark: #4338CA;
+            --color-secondary: #06B6D4;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-grey: #9CA3AF;
+            --color-bg: #F8FAFC;
+            --color-card: #FFFFFF;
+            --color-text: #1F2937;
+            --color-text-light: #6B7280;
+            --color-border: #E5E7EB;
+            --color-accent-1: #EC4899;
+            --color-accent-2: #8B5CF6;
+            --color-accent-3: #14B8A6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--color-text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-2) 100%);
+            color: white;
+            padding: 24px 32px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .app-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .app-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: white;
+            padding: 16px 32px;
+            border-bottom: 2px solid var(--color-border);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--color-text-light);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab i {
+            font-size: 16px;
+        }
+
+        .nav-tab:hover {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .nav-tab.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--color-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-not-started {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .status-started {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .status-completed {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-planned {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .status-visited {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-skipped {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card.primary {
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+        }
+
+        .stat-card.secondary {
+            --gradient-start: #06B6D4;
+            --gradient-end: #0891B2;
+        }
+
+        .stat-card.success {
+            --gradient-start: #10B981;
+            --gradient-end: #059669;
+        }
+
+        .stat-card.accent {
+            --gradient-start: #EC4899;
+            --gradient-end: #DB2777;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Trip List */
+        .trip-item {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .trip-item:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .trip-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .trip-route {
+            font-size: 14px;
+            color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trip-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--color-bg);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .countdown.alert-24 {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .countdown.alert-1 {
+            background: #FED7AA;
+            color: #EA580C;
+        }
+
+        .countdown.alert-past {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--color-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: var(--color-text-light);
+            margin-bottom: 24px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: var(--color-bg);
+            border-radius: 999px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--color-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-card);
+            border: 3px solid var(--color-primary);
+        }
+
+        .timeline-dot.completed {
+            background: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            padding: 16px 32px;
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-light);
+            font-size: 13px;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .footer strong {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .app-container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .header {
+                padding: 16px;
+                border-radius: 0;
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .nav-tabs {
+                padding: 12px 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hide sections by default */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .emergency-contact-box {
+            background: #FFE5E5;
+            border: 1px solid #FFCCCC;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .emergency-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .emergency-content {
+            flex: 1;
+        }
+
+        .emergency-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .emergency-text {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Photo Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .photo-upload:hover {
+            background: var(--color-border);
+        }
+
+        /* Detail View */
+        .detail-section {
+            margin-bottom: 32px;
+        }
+
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        /* SOS Button */
+        .sos-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            background: var(--color-danger);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            z-index: 999;
+            border: none;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .sos-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .sos-button i {
+            font-size: 28px;
+        }
+
+        /* SOS Modal */
+        .sos-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sos-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sos-modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+            border: 3px solid var(--color-danger);
+        }
+
+        .sos-modal-header {
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
+            color: white;
+            padding: 24px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            text-align: center;
+        }
+
+        .sos-modal-header i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .sos-modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .sos-info-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sos-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .sos-info-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .sos-info-value {
+            font-size: 16px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .sos-modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Location Button */
+        .location-btn {
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .location-btn:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .location-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Photo Upload */
+        .photo-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--color-bg);
+            border: 2px dashed var(--color-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        .photo-upload-btn:hover {
+            border-color: var(--color-primary);
+            background: var(--color-secondary);
+        }
+
+        .photo-preview {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid var(--color-border);
+            margin-right: 12px;
+            position: relative;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--color-danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        /* View Details Button */
+        .btn-view {
+            background: var(--color-secondary);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #0891B2;
+        }
+
+        /* Edit Mode */
+        .edit-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADdklEQVR4nO2ZS2hTQRSGv6aPaKvVqhVE0YWKCxduxIWIIIi4cOFCRFy4UAQXLkRcuBBx4UJERFy4EBHERVy4EBFx4UJERFy4EBERFy5ERFy0Wq1W+5hxzhBuQprc3Ny5SZr5YSA3Ock5/5yZe2YmkMlkMplMJpPJZDKZ/ykdQBfQDbQDrU5rcdpaXN8s+v8L2oEDwDngHvAaeAv8AH4Bv4EJ4DPwCngMXAd2Aa1pyNwKHAbuAp+AMaApxvwG8NnNu+zmN6Yhdxtwyi1eDPGFEb+AJ8BF4DCw0dWKdqARWAccBI679V4DS2PKbgZ2A/eBXwEBy3H6NXAFOOoW1UgcOe3ANWfDC/gEXAK2JiG7FTgLjAYEfHeG7qTsJSl7GXDeOYz6FrgMbEla9hrgAvBJZ6AOPADWxhUeJKDqbEuP5xywvBSy64DLTraqJFeSFh4kYMTZHnGFbVVZZLcAZ6T+1EkqKjwowEgq0bGyyV7idLajDqyqhPCggD5nX/cqK3wR2S1ObnVUW/hisgOZAXNYFTGGz5aDVWy0yM4C00l2noXkYFV7RLfKbuY8C4llDiYHi9rTc7C4Nh+SgxXqQGFysKq+xTlYHAdScbA4DrTUOdgqJ+tDSg4Wx4E2OAer2oP5HIzEHGxBsh1LpP4gRweL40ALku1QyvOoeLLDcCLleSk5WJgDVW3M52BxHUjNwcIcqGpjPgdb52wPpuRgYQ5UtTGfg1Xtz+dgizqQmoOFOVDVxnwOttL1/hkpT0+l5GBhDlS1MZ+DrXf9f6Q8L5oDRTlYWzD98EWWn3byK3GgUg7UMo/sPmf3XtkdrBQHmifIFuRAcRxovXOgx8p2oDgOtME50DMlO1CUA8V1oE3OgWryp1SIikJxHGiLWwiFqBgUx4E6nQO9ULDVL46AsJPwwJxOqXBdKiSKgLCT8EAJwoMEdCv+FzASxZMmIMipskBkB0oioMmp6khEdqCkAjqd4hFFR6AkBTQ7xSPKcqCkBSxyiu8p2oGSFtDg1I6ouAMlLQDgsFP8h2IdKGkBdU7tAUU7UNICOoCbqjiQjwCFCfBRlICTCs+BvqQtwEdRAvoVLoAkBfgouA4kKcBHwTUgaQE+CnagJAT4yDtQUgJ8FPROKW2Bj/wOFPUaGfXwWfGvkWGPWaWrk3Fqg67JeV5TpA5V6jEqM5lMJpPJZDKZTCaT6T/yB6z7+m1JMac2AAAAAElFTkSuQmCC" alt="Journeo">
+                </div>
+                <div class="app-title">
+                    <h1>Journeo</h1>
+                    <div class="app-subtitle">Hybrid Travel Logger & Visit Tracker</div>
+                </div>
+            </div>        <div class="header-actions">
+        </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('dashboard')" data-section="dashboard">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </button>
+            <button class="nav-tab" onclick="showSection('trips')" data-section="trips">
+                <i class="fa-solid fa-suitcase-rolling"></i>
+                My Trips
+            </button>
+            <button class="nav-tab" onclick="showSection('new-trip')" data-section="new-trip">
+                <i class="fa-solid fa-circle-plus"></i>
+                New Trip
+            </button>
+            <button class="nav-tab" onclick="showSection('profile')" data-section="profile">
+                <i class="fa-solid fa-id-card-clip"></i>
+                Profile
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-value" id="totalTrips">0</div>
+                        <div class="stat-label">Total Trips</div>
+                    </div>
+                    <div class="stat-card secondary">
+                        <div class="stat-value" id="activeTrips">0</div>
+                        <div class="stat-label">Active Trips</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value" id="completedTrips">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card accent">
+                        <div class="stat-value" id="totalVisits">0</div>
+                        <div class="stat-label">Places Visited</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h2>
+                    </div>
+                    <div id="recentActivity">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div class="empty-state-title">No trips yet</div>
+                            <div class="empty-state-text">Create your first trip to start tracking your journey</div>
+                            <button class="btn btn-primary" onclick="showSection('new-trip')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Create First Trip
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Trips Section -->
+            <div id="trips" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">All Trips</h2>
+                        <button class="btn btn-primary" onclick="showSection('new-trip')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            New Trip
+                        </button>
+                    </div>
+                    <div id="tripsList"></div>
+                </div>
+            </div>
+
+            <!-- New Trip Section -->
+            <div id="new-trip" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create New Trip</h2>
+                    </div>
+                    <form id="newTripForm" onsubmit="createTrip(event)">
+                        <div class="form-group">
+                            <label class="form-label">Trip Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="e.g., Summer Vacation 2025" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" placeholder="Brief description of your trip"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Location</label>
+                                <input type="text" class="form-control" name="startLocation" placeholder="e.g., Bangalore" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Destination</label>
+                                <input type="text" class="form-control" name="destination" placeholder="e.g., Goa" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Date & Time</label>
+                                <input type="datetime-local" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Date & Time</label>
+                                <input type="datetime-local" class="form-control" name="endDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" placeholder="Additional notes or reminders"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('newTripForm').reset()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Create Trip</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Trip Detail Section -->
+            <div id="trip-detail" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" id="tripDetailTitle">Trip Details</h2>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="showSection('trips')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                Back to Trips
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="updateTripStatus('started')">Start Trip</button>
+                            <button class="btn btn-sm btn-warning" onclick="updateTripStatus('completed')">Mark Complete</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteTrip()">Delete</button>
+                        </div>
+                    </div>
+                    <div id="tripDetailContent"></div>
+                </div>
+
+                <!-- Journey Legs Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Journey Legs</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addLegModal')">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Leg
+                        </button>
+                    </div>
+                    <div id="journeyLegs"></div>
+                </div>
+
+                <!-- Visits Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Places & Attractions</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addVisitModal')">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Visit
+                        </button>
+                    </div>
+                    <div id="visitsList"></div>
+                </div>
+
+                <!-- Halts Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Halts & Accommodations</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addHaltModal')">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Halt
+                        </button>
+                    </div>
+                    <div id="haltsList"></div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile" class="content-section">
+                <div class="emergency-banner">
+                    <div class="emergency-icon">
+                        <i class="fa-solid fa-circle-exclamation" style="font-size: 28px;"></i>
+                    </div>
+                    <div class="emergency-content">
+                        <div class="emergency-title">Emergency Information</div>
+                        <div class="emergency-text">Quick access to your critical details and emergency contacts</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Personal Information</h2>
+                        <button class="btn btn-primary btn-sm" id="profileEditBtn" onclick="toggleProfileEdit()">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span id="profileEditBtnText">Edit</span>
+                        </button>
+                    </div>
+                    <form id="profileForm" onsubmit="saveProfile(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" name="fullName" value="John Doe" required disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Primary Phone</label>
+                                <input type="tel" class="form-control" name="phone" value="+91 9876543210" required disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" name="address" placeholder="Full address" disabled></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city" placeholder="City" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" name="state" placeholder="State" disabled>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">PIN Code</label>
+                                <input type="text" class="form-control" name="pincode" placeholder="PIN Code" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Country</label>
+                                <input type="text" class="form-control" name="country" value="India" disabled>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Blood Group</label>
+                                <select class="form-control" name="bloodGroup" disabled>
+                                    <option>A+</option>
+                                    <option>A-</option>
+                                    <option>B+</option>
+                                    <option>B-</option>
+                                    <option>O+</option>
+                                    <option selected>O-</option>
+                                    <option>AB+</option>
+                                    <option>AB-</option>
+                                </select>
+                            </div>                        <div class="form-group">
+                            <label class="form-label">Blood Group</label>
+                            <select class="form-control" name="bloodGroup" disabled>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>O+</option>
+                                <option selected>O-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="emergency-contact-box">
+                        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--color-danger);">
+                            <i class="fa-solid fa-phone"></i> Emergency Contact Information
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact Name</label>
+                            <input type="text" class="form-control" name="emergencyContactName" placeholder="Full name of emergency contact" required disabled>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Relation</label>
+                                <input type="text" class="form-control" name="emergencyRelation" placeholder="e.g., Father, Mother, Spouse" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Emergency Contact Phone</label>
+                                <input type="tel" class="form-control" name="emergencyContact" value="+91 9876543211" required disabled>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Medications</label>
+                            <textarea class="form-control" name="medications" placeholder="List any regular medications" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Allergies</label>
+                            <textarea class="form-control" name="allergies" placeholder="List any allergies" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Medical Conditions</label>
+                            <textarea class="form-control" name="medicalConditions" placeholder="Any medical conditions to be aware of" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emergency Notes</label>
+                            <textarea class="form-control" name="emergencyNotes" placeholder="Additional emergency information" disabled></textarea>
+                        </div>
+                        <div class="modal-footer" id="profileSaveBtn" style="display: none;">
+                            <button type="submit" class="btn btn-primary">Save Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Developed by <strong>NavaHeu</strong> | Journeo v1.0
+        </div>
+    </div>
+
+    <!-- SOS Button -->
+    <button class="sos-button" onclick="triggerSOS()" title="Emergency SOS">
+        <i class="fa-solid fa-circle-exclamation"></i>
+    </button>
+
+    <!-- SOS Modal -->
+    <div id="sosModal" class="sos-modal">
+        <div class="sos-modal-content">
+            <div class="sos-modal-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h2 style="margin: 0; font-size: 24px;">🚨 EMERGENCY SOS 🚨</h2>
+                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Critical Emergency Information</p>
+            </div>
+            <div class="sos-modal-body" id="sosModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="sos-modal-footer">
+                <button class="btn btn-secondary" onclick="closeSOSModal()" style="flex: 1;">
+                    <i class="fa-solid fa-xmark"></i> Close
+                </button>
+                <button class="btn btn-danger" onclick="callEmergencyContact()" style="flex: 1;">
+                    <i class="fa-solid fa-phone"></i> Call Emergency Contact
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Leg Modal -->
+    <div id="addLegModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Journey Leg</h3>
+                <button class="btn btn-icon btn-secondary" onclick="closeModal('addLegModal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addLegForm" onsubmit="addLeg(event)">
+                    <div class="form-group">
+                        <label class="form-label">Transport Mode</label>
+                        <select class="form-control" name="mode" required>
+                            <option value="">Select mode...</option>
+                            <option value="Train"><i class="fa-solid fa-train"></i> Train</option>
+                            <option value="Bus"><i class="fa-solid fa-bus"></i> Bus</option>
+                            <option value="Flight"><i class="fa-solid fa-plane-up"></i> Flight</option>
+                            <option value="Car"><i class="fa-solid fa-car-rear"></i> Car</option>
+                            <option value="Ferry"><i class="fa-solid fa-ferry"></i> Ferry</option>
+                            <option value="Other"><i class="fa-solid fa-person-walking"></i> Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Train/Vehicle Name</label>
+                        <input type="text" class="form-control" name="vehicleName" placeholder="e.g., Rajdhani Express, Volvo Sleeper">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Vehicle Number</label>
+                            <input type="text" class="form-control" name="vehicleNumber" placeholder="e.g., 12345, 6E-123">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Operator/Carrier</label>
+                            <input type="text" class="form-control" name="operator" placeholder="e.g., Indian Railways, IndiGo">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">From</label>
+                            <input type="text" class="form-control" name="fromLocation" placeholder="Start location" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">To</label>
+                            <input type="text" class="form-control" name="toLocation" placeholder="End location" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Departure</label>
+                            <input type="datetime-local" class="form-control" name="departure" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Arrival</label>
+                            <input type="datetime-local" class="form-control" name="arrival" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Seat/Coach Number</label>
+                            <input type="text" class="form-control" name="seatNumber" placeholder="e.g., S4-42, 12A">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PNR/Booking Ref</label>
+                            <input type="text" class="form-control" name="bookingRef" placeholder="Booking reference">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Platform/Gate/Terminal</label>
+                        <input type="text" class="form-control" name="platform" placeholder="e.g., Platform 3, Gate A5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cost (Optional)</label>
+                        <input type="number" class="form-control" name="cost" placeholder="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" name="notes" placeholder="Additional information"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addLegModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Leg</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Visit Modal -->
+    <div id="addVisitModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Place Visit</h3>
+                <button class="btn btn-icon btn-secondary" onclick="closeModal('addVisitModal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addVisitForm" onsubmit="addVisit(event)">
+                    <div class="form-group">
+                        <label class="form-label">Place Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="e.g., Taj Mahal" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control" name="category">
+                            <option value="Historical">Historical</option>
+                            <option value="Beach">Beach</option>
+                            <option value="Mountain">Mountain</option>
+                            <option value="Restaurant">Restaurant</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Museum">Museum</option>
+                            <option value="Park">Park</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Arrival Time</label>
+                            <input type="datetime-local" class="form-control" name="arrival" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Departure Time</label>
+                            <input type="datetime-local" class="form-control" name="departure">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Entry Fee (₹)</label>
+                            <input type="number" class="form-control" name="entryFee" placeholder="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rating</label>
+                            <select class="form-control" name="rating">
+                                <option value="">Not rated</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Good</option>
+                                <option value="3">⭐⭐⭐ Average</option>
+                                <option value="2">⭐⭐ Poor</option>
+                                <option value="1">⭐ Very Poor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GPS Coordinates</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" class="form-control" name="gps" id="visitGps" placeholder="e.g., 27.1751, 78.0421">
+                            <button type="button" class="location-btn" onclick="getCurrentLocation('visitGps')">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+                                Get Location
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Photos</label>
+                        <input type="file" id="visitPhotos" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event, 'visitPhotoPreview')">
+                        <label for="visitPhotos" class="photo-upload-btn">
+                            <i class="fa-solid fa-camera"></i>
+                            Choose Photos
+                        </label>
+                        <div id="visitPhotoPreview" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" name="notes" placeholder="Recommendations, highlights, etc."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addVisitModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Visit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Halt Modal -->
+    <div id="addHaltModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Halt/Accommodation</h3>
+                <button class="btn btn-icon btn-secondary" onclick="closeModal('addHaltModal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addHaltForm" onsubmit="addHalt(event)">
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" name="location" placeholder="City or area" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Accommodation Type</label>
+                            <select class="form-control" name="type">
+                                <option value="Hotel">🏨 Hotel</option>
+                                <option value="Resort">🏖️ Resort</option>
+                                <option value="Guesthouse">🏠 Guesthouse</option>
+                                <option value="Hostel">🛏️ Hostel</option>
+                                <option value="Airbnb">🏡 Airbnb</option>
+                                <option value="Camping">⛺ Camping</option>
+                                <option value="Other">📍 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Hotel/Place name" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Check-in</label>
+                            <input type="datetime-local" class="form-control" name="checkin" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Check-out</label>
+                            <input type="datetime-local" class="form-control" name="checkout" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Room Number</label>
+                            <input type="text" class="form-control" name="roomNumber" placeholder="e.g., 302">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cost (₹)</label>
+                            <input type="number" class="form-control" name="cost" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Booking Reference</label>
+                            <input type="text" class="form-control" name="bookingRef" placeholder="Confirmation number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" name="contact" placeholder="Hotel contact">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amenities</label>
+                        <input type="text" class="form-control" name="amenities" placeholder="e.g., WiFi, Breakfast, Pool">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <select class="form-control" name="rating">
+                            <option value="">Not rated</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Good</option>
+                            <option value="3">⭐⭐⭐ Average</option>
+                            <option value="2">⭐⭐ Poor</option>
+                            <option value="1">⭐ Very Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" name="notes" placeholder="Special requests, experiences, etc."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addHaltModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Halt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let trips = JSON.parse(localStorage.getItem('journeo_trips')) || [];
+        let currentTripId = null;
+        let profile = JSON.parse(localStorage.getItem('journeo_profile')) || {
+            fullName: 'John Doe',
+            phone: '+91 9876543210',
+            bloodGroup: 'O-',
+            emergencyContact: '+91 9876543211',
+            emergencyContactName: '',
+            emergencyRelation: '',
+            address: '',
+            city: '',
+            state: '',
+            pincode: '',
+            country: 'India',
+            medications: '',
+            allergies: '',
+            medicalConditions: '',
+            emergencyNotes: ''
+        };
+        let uploadedPhotos = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            loadTrips();
+            loadProfile();
+            checkTripCompletions();
+            setInterval(checkTripCompletions, 60000); // Check every minute
+        });
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Activate corresponding tab
+            const tab = document.querySelector(`[data-section="${sectionId}"]`);
+            if (tab) tab.classList.add('active');
+            
+            // Reload data if needed
+            if (sectionId === 'dashboard') loadDashboard();
+            if (sectionId === 'trips') loadTrips();
+            if (sectionId === 'profile') loadProfile();
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            // Reset form if exists
+            const form = document.querySelector(`#${modalId} form`);
+            if (form) form.reset();
+        }
+
+        // Dashboard
+        function loadDashboard() {
+            const totalTrips = trips.length;
+            const activeTrips = trips.filter(t => t.status === 'started').length;
+            const completedTrips = trips.filter(t => t.status === 'completed').length;
+            const totalVisits = trips.reduce((sum, trip) => sum + (trip.visits || []).length, 0);
+
+            document.getElementById('totalTrips').textContent = totalTrips;
+            document.getElementById('activeTrips').textContent = activeTrips;
+            document.getElementById('completedTrips').textContent = completedTrips;
+            document.getElementById('totalVisits').textContent = totalVisits;
+
+            const recentActivity = document.getElementById('recentActivity');
+            if (trips.length === 0) {
+                recentActivity.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title">No trips yet</div>
+                        <div class="empty-state-text">Create your first trip to start tracking your journey</div>
+                        <button class="btn btn-primary" onclick="showSection('new-trip')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Create First Trip
+                        </button>
+                    </div>
+                `;
+            } else {
+                const recentTrips = trips.slice(-5).reverse();
+                recentActivity.innerHTML = recentTrips.map(trip => {
+                    const countdown = getCountdown(trip.startDate, trip.endDate, trip.status);
+                    const statusClass = getStatusClass(trip.status);
+                    return `
+                        <div class="trip-item" onclick="viewTrip('${trip.id}')">
+                            <div class="trip-header">
+                                <div>
+                                    <div class="trip-title">${trip.name}</div>
+                                    <div class="trip-route">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"></path>
+                                        </svg>
+                                        ${trip.startLocation} → ${trip.destination}
+                                    </div>
+                                </div>
+                                <span class="status-badge ${statusClass}">${trip.status.replace('-', ' ')}</span>
+                            </div>
+                            <div class="trip-footer">
+                                <span>${formatDate(trip.startDate)}</span>
+                                ${countdown ? `<span class="countdown ${countdown.alertClass}">${countdown.text}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Trip Management
+        function createTrip(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const trip = {
+                id: Date.now().toString(),
+                name: formData.get('name'),
+                description: formData.get('description'),
+                startLocation: formData.get('startLocation'),
+                destination: formData.get('destination'),
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                notes: formData.get('notes'),
+                status: 'not-started',
+                legs: [],
+                visits: [],
+                halts: [],
+                createdAt: new Date().toISOString()
+            };
+
+            trips.push(trip);
+            saveTrips();
+            form.reset();
+            showSection('trips');
+            alert('Trip created successfully!');
+        }
+
+        function loadTrips() {
+            const tripsList = document.getElementById('tripsList');
+            if (trips.length === 0) {
+                tripsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title">No trips yet</div>
+                        <div class="empty-state-text">Start planning your next adventure</div>
+                        <button class="btn btn-primary" onclick="showSection('new-trip')">Create Trip</button>
+                    </div>
+                `;
+                return;
+            }
+
+            tripsList.innerHTML = trips.map(trip => {
+                const countdown = getCountdown(trip.startDate, trip.endDate, trip.status);
+                const statusClass = getStatusClass(trip.status);
+                const progress = calculateTripProgress(trip);
+                
+                return `
+                    <div class="trip-item" onclick="viewTrip('${trip.id}')">
+                        <div class="trip-header">
+                            <div>
+                                <div class="trip-title">${trip.name}</div>
+                                <div class="trip-route">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"></path>
+                                    </svg>
+                                    ${trip.startLocation} → ${trip.destination}
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${trip.status.replace('-', ' ')}</span>
+                        </div>
+                        ${trip.description ? `<p style="margin: 12px 0; color: var(--color-text-light); font-size: 14px;">${trip.description}</p>` : ''}
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <span style="font-size: 13px; color: var(--color-text-light);">
+                                    ${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}
+                                </span>
+                            </div>
+                            ${countdown ? `<span class="countdown ${countdown.alertClass}">${countdown.text}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewTrip(tripId) {
+            currentTripId = tripId;
+            const trip = trips.find(t => t.id === tripId);
+            if (!trip) return;
+
+            document.getElementById('tripDetailTitle').textContent = trip.name;
+            
+            const statusClass = getStatusClass(trip.status);
+            const countdown = getCountdown(trip.startDate, trip.endDate, trip.status);
+            const progress = calculateTripProgress(trip);
+
+            document.getElementById('tripDetailContent').innerHTML = `
+                <div class="detail-section">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge ${statusClass}">${trip.status.replace('-', ' ')}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Progress</div>
+                            <div class="info-value">${progress}%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Start Location</div>
+                            <div class="info-value">${trip.startLocation}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Destination</div>
+                            <div class="info-value">${trip.destination}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Start Date & Time</div>
+                            <div class="info-value">${formatDateTime(trip.startDate)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">End Date & Time</div>
+                            <div class="info-value">${formatDateTime(trip.endDate)}</div>
+                        </div>
+                    </div>
+                    ${countdown ? `
+                        <div style="margin-top: 16px;">
+                            <span class="countdown ${countdown.alertClass}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                ${countdown.text}
+                            </span>
+                        </div>
+                    ` : ''}
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    ${trip.description ? `
+                        <div style="margin-top: 20px;">
+                            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Description</h4>
+                            <p style="color: var(--color-text-light); font-size: 14px;">${trip.description}</p>
+                        </div>
+                    ` : ''}
+                    ${trip.notes ? `
+                        <div style="margin-top: 16px;">
+                            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Notes</h4>
+                            <p style="color: var(--color-text-light); font-size: 14px;">${trip.notes}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            loadJourneyLegs(trip);
+            loadVisits(trip);
+            loadHalts(trip);
+
+            showSection('trip-detail');
+        }
+
+        function loadJourneyLegs(trip) {
+            const container = document.getElementById('journeyLegs');
+            if (!trip.legs || trip.legs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text">No journey legs added yet</div>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addLegModal')">Add First Leg</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="timeline">
+                    ${trip.legs.map((leg, index) => {
+                        const statusClass = getStatusClass(leg.status || 'not-started');
+                        const countdown = getCountdown(leg.departure, leg.arrival, leg.status || 'not-started');
+                        const legProgress = calculateLegProgress(leg);
+                        return `
+                            <div class="timeline-item">
+                                <div class="timeline-dot ${leg.status === 'completed' ? 'completed' : ''}"></div>
+                                <div class="timeline-content">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                                        <div>
+                                            <strong style="font-size: 16px;">${leg.mode}${leg.vehicleName ? ' - ' + leg.vehicleName : ''}</strong>
+                                            <div style="font-size: 13px; color: var(--color-text-light); margin-top: 4px;">
+                                                ${leg.vehicleNumber || 'N/A'} | ${leg.operator || 'Unknown operator'}
+                                            </div>
+                                        </div>
+                                        <span class="status-badge ${statusClass}">${(leg.status || 'not-started').replace('-', ' ')}</span>
+                                    </div>
+                                    <div class="info-grid" style="margin-bottom: 12px;">
+                                        <div class="info-item">
+                                            <div class="info-label">Route</div>
+                                            <div class="info-value">${leg.fromLocation} → ${leg.toLocation}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Departure</div>
+                                            <div class="info-value">${formatDateTime(leg.departure)}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Arrival</div>
+                                            <div class="info-value">${formatDateTime(leg.arrival)}</div>
+                                        </div>
+                                        ${leg.seatNumber ? `
+                                            <div class="info-item">
+                                                <div class="info-label">Seat/Coach</div>
+                                                <div class="info-value">${leg.seatNumber}</div>
+                                            </div>
+                                        ` : ''}
+                                        ${leg.platform ? `
+                                            <div class="info-item">
+                                                <div class="info-label">Platform/Gate</div>
+                                                <div class="info-value">${leg.platform}</div>
+                                            </div>
+                                        ` : ''}
+                                        ${leg.bookingRef ? `
+                                            <div class="info-item">
+                                                <div class="info-label">Booking Ref</div>
+                                                <div class="info-value">${leg.bookingRef}</div>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div style="margin-top: 12px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                            <span style="font-size: 12px; color: var(--color-text-light);">Leg Progress</span>
+                                            <span style="font-size: 12px; font-weight: 600; color: var(--color-text);">${legProgress}%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: ${legProgress}%"></div>
+                                        </div>
+                                    </div>
+                                    ${countdown ? `<div class="countdown ${countdown.alertClass}" style="margin-top: 12px;">${countdown.text}</div>` : ''}
+                                    ${leg.notes ? `<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-light);">${leg.notes}</div>` : ''}
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-view" onclick="viewLegDetails(${index})"><i class="fa-solid fa-eye"></i> View Details</button>
+                                        <button class="btn btn-sm btn-success" onclick="updateLegStatus(${index}, 'started')">Start</button>
+                                        <button class="btn btn-sm btn-warning" onclick="updateLegStatus(${index}, 'completed')">Complete</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteLeg(${index})">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function loadVisits(trip) {
+            const container = document.getElementById('visitsList');
+            if (!trip.visits || trip.visits.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text">No places visited yet</div>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addVisitModal')">Add First Visit</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = trip.visits.map((visit, index) => {
+                const statusClass = getStatusClass(visit.status || 'planned');
+                const countdown = getCountdown(visit.arrival, visit.departure, visit.status || 'planned');
+                return `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <strong style="font-size: 16px;">${visit.name}</strong>
+                                <div style="font-size: 13px; color: var(--color-text-light); margin-top: 4px;">
+                                    ${visit.category}
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${(visit.status || 'planned').replace('-', ' ')}</span>
+                        </div>
+                        <div class="info-grid" style="margin-bottom: 12px;">
+                            <div class="info-item">
+                                <div class="info-label">Arrival</div>
+                                <div class="info-value">${formatDateTime(visit.arrival)}</div>
+                            </div>
+                            ${visit.departure ? `
+                                <div class="info-item">
+                                    <div class="info-label">Departure</div>
+                                    <div class="info-value">${formatDateTime(visit.departure)}</div>
+                                </div>
+                            ` : ''}
+                            ${visit.entryFee ? `
+                                <div class="info-item">
+                                    <div class="info-label">Entry Fee</div>
+                                    <div class="info-value">₹${visit.entryFee}</div>
+                                </div>
+                            ` : ''}
+                            ${visit.rating ? `
+                                <div class="info-item">
+                                    <div class="info-label">Rating</div>
+                                    <div class="info-value">${'⭐'.repeat(visit.rating)}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${countdown ? `<div class="countdown ${countdown.alertClass}">${countdown.text}</div>` : ''}
+                        ${visit.notes ? `<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-light);">${visit.notes}</div>` : ''}
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewVisitDetails(${index})"><i class="fa-solid fa-eye"></i> View Details</button>
+                            <button class="btn btn-sm btn-success" onclick="updateVisitStatus(${index}, 'visited')">Mark Visited</button>
+                            <button class="btn btn-sm btn-secondary" onclick="updateVisitStatus(${index}, 'skipped')">Skip</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteVisit(${index})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadHalts(trip) {
+            const container = document.getElementById('haltsList');
+            if (!trip.halts || trip.halts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text">No accommodations added yet</div>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addHaltModal')">Add First Halt</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = trip.halts.map((halt, index) => {
+                const statusClass = getStatusClass(halt.status || 'not-started');
+                const countdown = getCountdown(halt.checkin, halt.checkout, halt.status || 'not-started');
+                return `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <strong style="font-size: 16px;">${halt.name}</strong>
+                                <div style="font-size: 13px; color: var(--color-text-light); margin-top: 4px;">
+                                    ${halt.type} - ${halt.location}
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${(halt.status || 'not-started').replace('-', ' ')}</span>
+                        </div>
+                        <div class="info-grid" style="margin-bottom: 12px;">
+                            <div class="info-item">
+                                <div class="info-label">Check-in</div>
+                                <div class="info-value">${formatDateTime(halt.checkin)}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Check-out</div>
+                                <div class="info-value">${formatDateTime(halt.checkout)}</div>
+                            </div>
+                            ${halt.roomNumber ? `
+                                <div class="info-item">
+                                    <div class="info-label">Room</div>
+                                    <div class="info-value">${halt.roomNumber}</div>
+                                </div>
+                            ` : ''}
+                            ${halt.cost ? `
+                                <div class="info-item">
+                                    <div class="info-label">Cost</div>
+                                    <div class="info-value">₹${halt.cost}</div>
+                                </div>
+                            ` : ''}
+                            ${halt.bookingRef ? `
+                                <div class="info-item">
+                                    <div class="info-label">Booking Ref</div>
+                                    <div class="info-value">${halt.bookingRef}</div>
+                                </div>
+                            ` : ''}
+                            ${halt.contact ? `
+                                <div class="info-item">
+                                    <div class="info-label">Contact</div>
+                                    <div class="info-value">${halt.contact}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${halt.amenities ? `<div style="font-size: 13px; color: var(--color-text-light); margin-bottom: 12px;"><strong>Amenities:</strong> ${halt.amenities}</div>` : ''}
+                        ${countdown ? `<div class="countdown ${countdown.alertClass}">${countdown.text}</div>` : ''}
+                        ${halt.notes ? `<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-light);">${halt.notes}</div>` : ''}
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewHaltDetails(${index})"><i class="fa-solid fa-eye"></i> View Details</button>
+                            <button class="btn btn-sm btn-success" onclick="updateHaltStatus(${index}, 'started')">Check In</button>
+                            <button class="btn btn-sm btn-warning" onclick="updateHaltStatus(${index}, 'completed')">Check Out</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteHalt(${index})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addLeg(event) {
+            event.preventDefault();
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+
+            const formData = new FormData(event.target);
+            const leg = {
+                mode: formData.get('mode'),
+                vehicleName: formData.get('vehicleName'),
+                vehicleNumber: formData.get('vehicleNumber'),
+                operator: formData.get('operator'),
+                fromLocation: formData.get('fromLocation'),
+                toLocation: formData.get('toLocation'),
+                departure: formData.get('departure'),
+                arrival: formData.get('arrival'),
+                seatNumber: formData.get('seatNumber'),
+                bookingRef: formData.get('bookingRef'),
+                platform: formData.get('platform'),
+                cost: formData.get('cost'),
+                notes: formData.get('notes'),
+                status: 'not-started'
+            };
+
+            if (!trip.legs) trip.legs = [];
+            trip.legs.push(leg);
+            saveTrips();
+            closeModal('addLegModal');
+            viewTrip(currentTripId);
+        }
+
+        function addVisit(event) {
+            event.preventDefault();
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+
+            const formData = new FormData(event.target);
+            const visit = {
+                name: formData.get('name'),
+                category: formData.get('category'),
+                arrival: formData.get('arrival'),
+                departure: formData.get('departure'),
+                entryFee: formData.get('entryFee'),
+                rating: formData.get('rating'),
+                gps: formData.get('gps'),
+                photos: uploadedPhotos.length > 0 ? [...uploadedPhotos] : [],
+                notes: formData.get('notes'),
+                status: 'planned'
+            };
+
+            if (!trip.visits) trip.visits = [];
+            trip.visits.push(visit);
+            saveTrips();
+            uploadedPhotos = [];
+            closeModal('addVisitModal');
+            viewTrip(currentTripId);
+        }
+
+        function addHalt(event) {
+            event.preventDefault();
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+
+            const formData = new FormData(event.target);
+            const halt = {
+                location: formData.get('location'),
+                type: formData.get('type'),
+                name: formData.get('name'),
+                checkin: formData.get('checkin'),
+                checkout: formData.get('checkout'),
+                roomNumber: formData.get('roomNumber'),
+                cost: formData.get('cost'),
+                bookingRef: formData.get('bookingRef'),
+                contact: formData.get('contact'),
+                amenities: formData.get('amenities'),
+                rating: formData.get('rating'),
+                notes: formData.get('notes'),
+                status: 'not-started'
+            };
+
+            if (!trip.halts) trip.halts = [];
+            trip.halts.push(halt);
+            saveTrips();
+            closeModal('addHaltModal');
+            viewTrip(currentTripId);
+        }
+
+        function updateTripStatus(status) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+            
+            const originalStartDate = trip.startDate;
+            trip.status = status;
+            
+            if (status === 'started') {
+                trip.startDate = originalStartDate; // Keep original start date
+            } else if (status === 'completed') {
+                trip.endDate = getCurrentISTDateTime();
+                trip.completedAt = new Date().toISOString();
+            }
+            
+            saveTrips();
+            viewTrip(currentTripId);
+            loadDashboard();
+        }
+
+        function updateLegStatus(index, status) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.legs[index]) return;
+            
+            const originalDeparture = trip.legs[index].departure;
+            trip.legs[index].status = status;
+            
+            if (status === 'started') {
+                trip.legs[index].departure = originalDeparture; // Keep original departure
+            } else if (status === 'completed') {
+                trip.legs[index].arrival = getCurrentISTDateTime();
+                trip.legs[index].completedAt = new Date().toISOString();
+            }
+            
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        function updateVisitStatus(index, status) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.visits[index]) return;
+            trip.visits[index].status = status;
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        function updateHaltStatus(index, status) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.halts[index]) return;
+            trip.halts[index].status = status;
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        function deleteTrip() {
+            if (!confirm('Are you sure you want to delete this trip? This action cannot be undone.')) return;
+            trips = trips.filter(t => t.id !== currentTripId);
+            saveTrips();
+            showSection('trips');
+            loadDashboard();
+        }
+
+        function deleteLeg(index) {
+            if (!confirm('Delete this journey leg?')) return;
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+            trip.legs.splice(index, 1);
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        function deleteVisit(index) {
+            if (!confirm('Delete this visit?')) return;
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+            trip.visits.splice(index, 1);
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        function deleteHalt(index) {
+            if (!confirm('Delete this halt?')) return;
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+            trip.halts.splice(index, 1);
+            saveTrips();
+            viewTrip(currentTripId);
+        }
+
+        // Profile
+        function loadProfile() {
+            const form = document.getElementById('profileForm');
+            form.fullName.value = profile.fullName || '';
+            form.phone.value = profile.phone || '';
+            form.bloodGroup.value = profile.bloodGroup || 'O-';
+            form.emergencyContactName.value = profile.emergencyContactName || '';
+            form.emergencyContact.value = profile.emergencyContact || '';
+            form.emergencyRelation.value = profile.emergencyRelation || '';
+            form.address.value = profile.address || '';
+            form.city.value = profile.city || '';
+            form.state.value = profile.state || '';
+            form.pincode.value = profile.pincode || '';
+            form.country.value = profile.country || 'India';
+            form.medications.value = profile.medications || '';
+            form.allergies.value = profile.allergies || '';
+            form.medicalConditions.value = profile.medicalConditions || '';
+            form.emergencyNotes.value = profile.emergencyNotes || '';
+        }
+
+        function toggleProfileEdit() {
+            const form = document.getElementById('profileForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            const isDisabled = inputs[0].disabled;
+            const btnText = document.getElementById('profileEditBtnText');
+            const saveBtn = document.getElementById('profileSaveBtn');
+            const editBtn = document.getElementById('profileEditBtn');
+
+            inputs.forEach(input => {
+                input.disabled = !isDisabled;
+            });
+
+            if (isDisabled) {
+                btnText.innerHTML = '<i class="fa-solid fa-rectangle-xmark"></i> Cancel';
+                editBtn.classList.remove('btn-primary');
+                editBtn.classList.add('btn-secondary');
+            } else {
+                btnText.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit';
+                editBtn.classList.remove('btn-secondary');
+                editBtn.classList.add('btn-primary');
+            }
+            
+            saveBtn.style.display = isDisabled ? 'flex' : 'none';
+        }
+
+        function saveProfile(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            profile = {
+                fullName: formData.get('fullName'),
+                phone: formData.get('phone'),
+                bloodGroup: formData.get('bloodGroup'),
+                emergencyContactName: formData.get('emergencyContactName'),
+                emergencyContact: formData.get('emergencyContact'),
+                emergencyRelation: formData.get('emergencyRelation'),
+                address: formData.get('address'),
+                city: formData.get('city'),
+                state: formData.get('state'),
+                pincode: formData.get('pincode'),
+                country: formData.get('country'),
+                medications: formData.get('medications'),
+                allergies: formData.get('allergies'),
+                medicalConditions: formData.get('medicalConditions'),
+                emergencyNotes: formData.get('emergencyNotes')
+            };
+
+            localStorage.setItem('journeo_profile', JSON.stringify(profile));
+            toggleProfileEdit();
+            alert('Profile saved successfully!');
+        }
+
+        function triggerSOS() {
+            const modal = document.getElementById('sosModal');
+            const modalBody = document.getElementById('sosModalBody');
+            
+            modalBody.innerHTML = `
+                <div class="sos-info-item">
+                    <div class="sos-info-label"><i class="fa-solid fa-user"></i> Full Name</div>
+                    <div class="sos-info-value">${profile.fullName || 'Not provided'}</div>
+                </div>
+                <div class="sos-info-item">
+                    <div class="sos-info-label"><i class="fa-solid fa-phone"></i> Primary Phone</div>
+                    <div class="sos-info-value">${profile.phone || 'Not provided'}</div>
+                </div>
+                <div class="sos-info-item">
+                    <div class="sos-info-label"><i class="fa-solid fa-droplet"></i> Blood Group</div>
+                    <div class="sos-info-value">${profile.bloodGroup || 'Not provided'}</div>
+                </div>
+                <div class="sos-info-item">
+                    <div class="sos-info-label"><i class="fa-solid fa-user-shield"></i> Emergency Contact</div>
+                    <div class="sos-info-value">${profile.emergencyContactName || 'Not provided'}${profile.emergencyRelation ? ` (${profile.emergencyRelation})` : ''} - ${profile.emergencyContact || 'No phone'}</div>
+                </div>
+                ${profile.address ? `
+                    <div class="sos-info-item">
+                        <div class="sos-info-label"><i class="fa-solid fa-location-dot"></i> Address</div>
+                        <div class="sos-info-value">${profile.address}, ${profile.city}, ${profile.state} - ${profile.pincode}, ${profile.country}</div>
+                    </div>
+                ` : ''}
+                ${profile.medications ? `
+                    <div class="sos-info-item">
+                        <div class="sos-info-label"><i class="fa-solid fa-pills"></i> Medications</div>
+                        <div class="sos-info-value">${profile.medications}</div>
+                    </div>
+                ` : ''}
+                ${profile.allergies ? `
+                    <div class="sos-info-item">
+                        <div class="sos-info-label"><i class="fa-solid fa-triangle-exclamation"></i> Allergies</div>
+                        <div class="sos-info-value">${profile.allergies}</div>
+                    </div>
+                ` : ''}
+                ${profile.medicalConditions ? `
+                    <div class="sos-info-item">
+                        <div class="sos-info-label"><i class="fa-solid fa-heart-pulse"></i> Medical Conditions</div>
+                        <div class="sos-info-value">${profile.medicalConditions}</div>
+                    </div>
+                ` : ''}
+                ${profile.emergencyNotes ? `
+                    <div class="sos-info-item">
+                        <div class="sos-info-label"><i class="fa-solid fa-note-sticky"></i> Emergency Notes</div>
+                        <div class="sos-info-value">${profile.emergencyNotes}</div>
+                    </div>
+                ` : ''}
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeSOSModal() {
+            document.getElementById('sosModal').classList.remove('active');
+        }
+
+        function callEmergencyContact() {
+            if (profile.emergencyContact) {
+                window.location.href = `tel:${profile.emergencyContact}`;
+            } else {
+                alert('No emergency contact number available');
+            }
+        }
+
+        function getCurrentLocation(inputId) {
+            const input = document.getElementById(inputId);
+            const btn = event.target.closest('.location-btn');
+            
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Getting...';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lon = position.coords.longitude.toFixed(6);
+                    input.value = `${lat}, ${lon}`;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Get Location';
+                },
+                (error) => {
+                    alert('Unable to retrieve location: ' + error.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Get Location';
+                }
+            );
+        }
+
+        function editTripDetails() {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip) return;
+            
+            const newName = prompt('Trip Name:', trip.name);
+            if (newName !== null && newName.trim()) trip.name = newName.trim();
+            
+            const newDesc = prompt('Description:', trip.description);
+            if (newDesc !== null) trip.description = newDesc.trim();
+            
+            const newStart = prompt('Start Location:', trip.startLocation);
+            if (newStart !== null && newStart.trim()) trip.startLocation = newStart.trim();
+            
+            const newDest = prompt('Destination:', trip.destination);
+            if (newDest !== null && newDest.trim()) trip.destination = newDest.trim();
+            
+            saveTrips();
+            viewTrip(currentTripId);
+            loadDashboard();
+            loadTrips();
+        }
+
+        function viewLegDetails(index) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.legs[index]) return;
+            
+            const leg = trip.legs[index];
+            const statusClass = getStatusClass(leg.status || 'not-started');
+            
+            const modalContent = `
+                <div id="viewLegModal" class="modal active">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">${leg.mode}${leg.vehicleName ? ' - ' + leg.vehicleName : ''}</h3>
+                            <button class="btn btn-icon btn-secondary" onclick="closeViewModal()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Status</div>
+                                    <div class="info-value"><span class="status-badge ${statusClass}">${(leg.status || 'not-started').replace('-', ' ')}</span></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Mode</div>
+                                    <div class="info-value">${leg.mode}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Vehicle Name</div>
+                                    <div class="info-value">${leg.vehicleName || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Vehicle Number</div>
+                                    <div class="info-value">${leg.vehicleNumber || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Operator</div>
+                                    <div class="info-value">${leg.operator || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">From</div>
+                                    <div class="info-value">${leg.fromLocation}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">To</div>
+                                    <div class="info-value">${leg.toLocation}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Departure</div>
+                                    <div class="info-value">${formatDateTime(leg.departure)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Arrival</div>
+                                    <div class="info-value">${formatDateTime(leg.arrival)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Seat/Coach</div>
+                                    <div class="info-value">${leg.seatNumber || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Platform/Gate</div>
+                                    <div class="info-value">${leg.platform || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Booking Reference</div>
+                                    <div class="info-value">${leg.bookingRef || 'N/A'}</div>
+                                </div>
+                                ${leg.cost ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Cost</div>
+                                        <div class="info-value">₹${leg.cost}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${leg.notes ? `<div style="margin-top: 20px; padding: 12px; background: var(--color-bg); border-radius: var(--radius-sm);"><strong>Notes:</strong><br>${leg.notes}</div>` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="closeViewModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+        }
+
+        function viewVisitDetails(index) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.visits[index]) return;
+            
+            const visit = trip.visits[index];
+            const statusClass = getStatusClass(visit.status || 'planned');
+            
+            const modalContent = `
+                <div id="viewVisitModal" class="modal active">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">${visit.name}</h3>
+                            <button class="btn btn-icon btn-secondary" onclick="closeViewModal()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Status</div>
+                                    <div class="info-value"><span class="status-badge ${statusClass}">${(visit.status || 'planned').replace('-', ' ')}</span></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Category</div>
+                                    <div class="info-value">${visit.category}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Arrival Time</div>
+                                    <div class="info-value">${formatDateTime(visit.arrival)}</div>
+                                </div>
+                                ${visit.departure ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Departure Time</div>
+                                        <div class="info-value">${formatDateTime(visit.departure)}</div>
+                                    </div>
+                                ` : ''}
+                                ${visit.entryFee ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Entry Fee</div>
+                                        <div class="info-value">₹${visit.entryFee}</div>
+                                    </div>
+                                ` : ''}
+                                ${visit.rating ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Rating</div>
+                                        <div class="info-value">${'⭐'.repeat(visit.rating)}</div>
+                                    </div>
+                                ` : ''}
+                                ${visit.gps ? `
+                                    <div class="info-item">
+                                        <div class="info-label">GPS Coordinates</div>
+                                        <div class="info-value">${visit.gps}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${visit.notes ? `<div style="margin-top: 20px; padding: 12px; background: var(--color-bg); border-radius: var(--radius-sm);"><strong>Notes:</strong><br>${visit.notes}</div>` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="closeViewModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+        }
+
+        function viewHaltDetails(index) {
+            const trip = trips.find(t => t.id === currentTripId);
+            if (!trip || !trip.halts[index]) return;
+            
+            const halt = trip.halts[index];
+            const statusClass = getStatusClass(halt.status || 'not-started');
+            
+            const modalContent = `
+                <div id="viewHaltModal" class="modal active">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">${halt.name}</h3>
+                            <button class="btn btn-icon btn-secondary" onclick="closeViewModal()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Status</div>
+                                    <div class="info-value"><span class="status-badge ${statusClass}">${(halt.status || 'not-started').replace('-', ' ')}</span></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Type</div>
+                                    <div class="info-value">${halt.type}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Location</div>
+                                    <div class="info-value">${halt.location}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Check-in</div>
+                                    <div class="info-value">${formatDateTime(halt.checkin)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Check-out</div>
+                                    <div class="info-value">${formatDateTime(halt.checkout)}</div>
+                                </div>
+                                ${halt.roomNumber ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Room Number</div>
+                                        <div class="info-value">${halt.roomNumber}</div>
+                                    </div>
+                                ` : ''}
+                                ${halt.cost ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Cost</div>
+                                        <div class="info-value">₹${halt.cost}</div>
+                                    </div>
+                                ` : ''}
+                                ${halt.bookingRef ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Booking Reference</div>
+                                        <div class="info-value">${halt.bookingRef}</div>
+                                    </div>
+                                ` : ''}
+                                ${halt.contact ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Contact</div>
+                                        <div class="info-value">${halt.contact}</div>
+                                    </div>
+                                ` : ''}
+                                ${halt.amenities ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Amenities</div>
+                                        <div class="info-value">${halt.amenities}</div>
+                                    </div>
+                                ` : ''}
+                                ${halt.rating ? `
+                                    <div class="info-item">
+                                        <div class="info-label">Rating</div>
+                                        <div class="info-value">${'⭐'.repeat(halt.rating)}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${halt.notes ? `<div style="margin-top: 20px; padding: 12px; background: var(--color-bg); border-radius: var(--radius-sm);"><strong>Notes:</strong><br>${halt.notes}</div>` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="closeViewModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+        }
+
+        function closeViewModal() {
+            const modals = ['viewLegModal', 'viewVisitModal', 'viewHaltModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function handlePhotoUpload(event, previewId) {
+            const files = Array.from(event.target.files);
+            const preview = document.getElementById(previewId);
+            
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const photoData = {
+                            name: file.name,
+                            data: e.target.result
+                        };
+                        uploadedPhotos.push(photoData);
+                        
+                        const photoDiv = document.createElement('div');
+                        photoDiv.className = 'photo-preview';
+                        photoDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button type="button" class="photo-preview-remove" onclick="removePhoto(${uploadedPhotos.length - 1}, '${previewId}')">&times;</button>
+                        `;
+                        preview.appendChild(photoDiv);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function removePhoto(index, previewId) {
+            uploadedPhotos.splice(index, 1);
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+            
+            uploadedPhotos.forEach((photo, idx) => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-preview';
+                photoDiv.innerHTML = `
+                    <img src="${photo.data}" alt="${photo.name}">
+                    <button type="button" class="photo-preview-remove" onclick="removePhoto(${idx}, '${previewId}')">&times;</button>
+                `;
+                preview.appendChild(photoDiv);
+            });
+        }
+
+        function checkTripCompletions() {
+            const now = new Date();
+            let updated = false;
+
+            trips.forEach(trip => {
+                const endDate = new Date(trip.endDate);
+                if (trip.status !== 'completed' && now > endDate) {
+                    trip.status = 'completed';
+                    trip.completedAt = now.toISOString();
+                    updated = true;
+                }
+
+                // Check journey legs
+                if (trip.legs) {
+                    trip.legs.forEach(leg => {
+                        const arrivalDate = new Date(leg.arrival);
+                        if (leg.status !== 'completed' && now > arrivalDate) {
+                            leg.status = 'completed';
+                            leg.completedAt = now.toISOString();
+                            updated = true;
+                        }
+                    });
+                }
+            });
+
+            if (updated) {
+                saveTrips();
+                if (document.getElementById('dashboard').classList.contains('active')) {
+                    loadDashboard();
+                }
+                if (document.getElementById('trips').classList.contains('active')) {
+                    loadTrips();
+                }
+            }
+        }
+
+        // Utility Functions
+        function saveTrips() {
+            localStorage.setItem('journeo_trips', JSON.stringify(trips));
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            let hours = date.getHours();
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            hours = String(hours).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes} ${ampm} IST`;
+        }
+
+        function getCurrentISTDateTime() {
+            const now = new Date();
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(now.getTime() + istOffset - (now.getTimezoneOffset() * 60 * 1000));
+            return istTime.toISOString().slice(0, 16);
+        }
+
+        function getCountdown(startDateString, endDateString = null, status = 'not-started') {
+            const now = new Date();
+            let target;
+            
+            // Determine which date to count down to based on status
+            if (status === 'not-started' || status === 'planned') {
+                target = new Date(startDateString); // Count to START time
+            } else if (status === 'started' && endDateString) {
+                target = new Date(endDateString); // Count to END time
+            } else if (status === 'completed') {
+                return null; // No countdown for completed items
+            } else {
+                target = new Date(startDateString);
+            }
+
+            const diff = target - now;
+
+            if (diff < 0) {
+                return { text: 'Past due', alertClass: 'alert-past' };
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            let alertClass = '';
+            const totalHours = days * 24 + hours;
+            if (totalHours < 1) {
+                alertClass = 'alert-1'; // Less than 1 hour - orange
+            } else if (totalHours < 24) {
+                alertClass = 'alert-24'; // Less than 24 hours - yellow
+            }
+
+            // Format: Days, Hours, Minutes, Seconds
+            return { 
+                text: `${days}d, ${hours}h, ${minutes}m, ${seconds}s`, 
+                alertClass 
+            };
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'not-started': 'status-not-started',
+                'started': 'status-started',
+                'completed': 'status-completed',
+                'planned': 'status-planned',
+                'visited': 'status-visited',
+                'skipped': 'status-skipped'
+            };
+            return statusMap[status] || 'status-not-started';
+        }
+
+        function calculateTripProgress(trip) {
+            if (trip.status === 'completed') return 100;
+            if (trip.status === 'not-started') return 0;
+
+            const now = new Date();
+            const start = new Date(trip.startDate);
+            const end = new Date(trip.endDate);
+
+            if (now < start) return 0;
+            if (now > end) return 100;
+
+            const totalDuration = end - start;
+            const elapsed = now - start;
+            return Math.round((elapsed / totalDuration) * 100);
+        }
+
+        function calculateLegProgress(leg) {
+            if (leg.status === 'completed') return 100;
+            if (leg.status === 'not-started') return 0;
+
+            const now = new Date();
+            const start = new Date(leg.departure);
+            const end = new Date(leg.arrival);
+
+            if (now < start) return 0;
+            if (now > end) return 100;
+
+            const totalDuration = end - start;
+            const elapsed = now - start;
+            return Math.round((elapsed / totalDuration) * 100);
+        }
+    </script>
+</body>
+</html>
+
