@@ -1136,11 +1136,11 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Start Location</label>
+                                <label class="form-label">Start Point</label>
                                 <input type="text" class="form-control" name="startLocation" placeholder="e.g., Bangalore" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Destination</label>
+                                <label class="form-label">Destination Point</label>
                                 <input type="text" class="form-control" name="destination" placeholder="e.g., Goa" required>
                             </div>
                         </div>
@@ -1507,11 +1507,11 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Visit Time</label>
+                            <label class="form-label">Visit Date & Time</label>
                             <input type="datetime-local" class="form-control" name="arrival" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Departure Time</label>
+                            <label class="form-label">Departure Date & Time</label>
                             <input type="datetime-local" class="form-control" name="departure">
                         </div>
                     </div>
@@ -1900,11 +1900,11 @@
                             <div class="info-value">${progress}%</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Start Location</div>
+                            <div class="info-label">Start Point</div>
                             <div class="info-value">${trip.startLocation}</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Destination</div>
+                            <div class="info-label">Destination Point</div>
                             <div class="info-value">${trip.destination}</div>
                         </div>
                         <div class="info-item">
@@ -1989,7 +1989,7 @@
                                             <div class="info-value">${leg.fromLocation} → ${leg.toLocation}</div>
                                         </div>
                                         <div class="info-item">
-                                            <div class="info-label">Departure</div>
+                                            <div class="info-label">Departure Date & Time</div>
                                             <div class="info-value">${formatDateTime(leg.departure)}</div>
                                         </div>
                                         <div class="info-item">
@@ -2073,7 +2073,7 @@
                             </div>
                             ${visit.departure ? `
                                 <div class="info-item">
-                                    <div class="info-label">Departure</div>
+                                    <div class="info-label">Departure Date & Time</div>
                                     <div class="info-value">${formatDateTime(visit.departure)}</div>
                                 </div>
                             ` : ''}
@@ -2659,12 +2659,12 @@
                                     <div class="info-value">${visit.category}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Visit Time</div>
+                                    <div class="info-label">Visit Date & Time</div>
                                     <div class="info-value">${formatDateTime(visit.arrival)}</div>
                                 </div>
                                 ${visit.departure ? `
                                     <div class="info-item">
-                                        <div class="info-label">Departure Time</div>
+                                        <div class="info-label">Departure Date & Time</div>
                                         <div class="info-value">${formatDateTime(visit.departure)}</div>
                                     </div>
                                 ` : ''}
